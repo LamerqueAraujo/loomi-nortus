@@ -12,6 +12,9 @@ const config = {
       },
     },
   },
+  boxShadow: {
+    'neon-lg': '0 0 20px 10px rgba(0, 240, 255, 0.7), 0 0 40px 20px rgba(0, 255, 255, 0.4)',
+  },
 
 };
 
