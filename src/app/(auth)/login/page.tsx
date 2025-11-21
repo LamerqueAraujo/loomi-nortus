@@ -8,16 +8,13 @@ export default function LoginPage(): JSX.Element {
   return (
     <main className="min-h-screen w-full bg-[#0B1125] text-[#E3E3E3] flex items-center justify-center px-6 lg:px-12 py-10">
       <div className="w-full max-w-[1440px] grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
-        {/* COLUNA ESQUERDA – LOGO, TEXTO E FORM */}
         <section className="w-full max-w-[640px] lg:justify-self-start">
-          {/* Nortus */}
           <div className="mb-16">
             <h2 className="text-[56px] leading-none text-[#1876D2] font-semibold">
               Nortus
             </h2>
           </div>
 
-          {/* Título + subtítulo */}
           <div className="space-y-3 mb-10">
             <h1 className="text-[36px] font-space">Login</h1>
             <p className="text-base lg:text-lg text-white/80 max-w-[460px]">
@@ -25,11 +22,9 @@ export default function LoginPage(): JSX.Element {
             </p>
           </div>
 
-          {/* Formulário */}
           <LoginForm />
         </section>
 
-        {/* COLUNA DIREITA – ILUSTRAÇÃO + BOTÕES SUPERIORES */}
         <section className="relative flex w-full lg:justify-end">
           <TopBarLogin />
 
