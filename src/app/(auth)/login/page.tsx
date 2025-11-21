@@ -1,8 +1,8 @@
 'use client'
 
 import type { JSX } from 'react'
-import LoginForm from '@/components/LoginForm'
-import { TopBarLogin } from '@/components/ui/TopBarLogin'
+import LoginForm from '@/components/(auth)/LoginForm'
+import { TopBarLogin } from '@/components/(auth)/TopBarLogin'
 
 export default function LoginPage(): JSX.Element {
   return (
