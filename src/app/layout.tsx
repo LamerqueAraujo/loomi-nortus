@@ -1,15 +1,19 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Space_Grotesk } from 'next/font/google'
 import './globals.css'
+import { Toaster } from 'sonner'
+import { AuthProvider } from '@/providers/AuthProvider'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  display: 'swap',
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -18,17 +22,13 @@ export const metadata: Metadata = {
     'Aplicação desenvolvida para o processo seletivo da empresa Loomi',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html className={`${inter.variable} ${spaceGrotesk.variable}`} lang="pt-BR">
+      <body>
+        <Toaster richColors position="top-left" />
+
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )
