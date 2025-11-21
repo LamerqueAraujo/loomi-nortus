@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic'
 
-// Carrega o ApexCharts somente no client
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 export default function KpiEvolutionChart() {
@@ -15,7 +14,7 @@ export default function KpiEvolutionChart() {
 
   const options = {
     chart: {
-      type: 'area',
+      type: 'area' as const,
       toolbar: { show: false },
       zoom: { enabled: false },
     },
@@ -26,7 +25,7 @@ export default function KpiEvolutionChart() {
     },
     colors: ['#3BA7F3'],
     fill: {
-      type: 'gradient',
+      type: 'gradient' as const,
       gradient: {
         shadeIntensity: 1,
         opacityFrom: 0.5,

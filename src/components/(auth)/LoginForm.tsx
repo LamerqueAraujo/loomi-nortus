@@ -24,7 +24,14 @@ export default function LoginForm() {
   const [userFocused, setUserFocused] = useState(false)
 
   useEffect(() => {
-    if (usernameRef.current?.value) {
+    const savedEmail = localStorage.getItem('rememberEmail')
+
+    if (savedEmail) {
+      setUsername(savedEmail)
+      setRememberUser(true)
+    }
+
+    if (usernameRef.current?.value && !savedEmail) {
       setUsername(usernameRef.current.value)
     }
   }, [])
@@ -47,9 +54,9 @@ export default function LoginForm() {
       setAuth(accessToken, user)
 
       if (rememberUser) {
-        localStorage.setItem('rememberUser', user)
+        localStorage.setItem('rememberEmail', username)
       } else {
-        localStorage.removeItem('rememberUser')
+        localStorage.removeItem('rememberEmail')
       }
 
       toast.success('Login realizado com sucesso!')

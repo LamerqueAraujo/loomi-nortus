@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
+import path from 'path'
 
 export const useAuthStore = create((set) => ({
   token: null,
   username: null,
   authenticated: false,
 
-  // Carrega token/username do cookie/localStorage ao iniciar
   loadFromStorage: () => {
     const token = Cookies.get('token')
     const username = localStorage.getItem('username')
@@ -22,7 +22,12 @@ export const useAuthStore = create((set) => ({
 
   // Login bem-sucedido
   setAuth: (token, username) => {
-    Cookies.set('token', token, { expires: 1 }) // 1 dia
+    Cookies.set('token', token, {
+      expires: 1,
+      path: '/',
+      sameSite: 'strict',
+      secure: false,
+    })
     localStorage.setItem('username', username)
 
     set({
@@ -34,7 +39,7 @@ export const useAuthStore = create((set) => ({
 
   // Logout
   clearAuth: () => {
-    Cookies.remove('token')
+    Cookies.remove('token', { path: '/' })
     localStorage.removeItem('username')
 
     set({

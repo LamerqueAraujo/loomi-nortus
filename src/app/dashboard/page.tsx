@@ -1,25 +1,20 @@
-import Sidebar from '@/components/dashboard/Sidebar'
-import Header from '@/components/dashboard/Header'
-import KpiEvolutionChart from '@/components/dashboard/KpiEvolutionChart'
-import KpiCards from '@/components/dashboard/KpiCards'
+'use client'
+
+import { useUIStore } from '@/stores/ui.store'
+import DashboardView from '@/components/dashboard/DashboardView'
+import TicketsView from '@/components/tickets/TicketsView'
+import PlansView from '@/components/plans/PlansView'
+import Customer360View from '@/components/customer360/Customer360View'
+import ChatView from '@/components/chat/ChatView'
 
 export default function DashboardPage() {
-  return (
-    <main className="flex min-h-screen bg-[#0B1125] text-white">
-      {/* Sidebar */}
-      <Sidebar />
+  const activePage = useUIStore((s) => s.activePage)
 
-      {/* Conteúdo */}
-      <div className="flex-1 p-8 space-y-8">
-        <Header title="Dashboard" />
+  if (activePage === 'dashboard') return <DashboardView />
+  if (activePage === 'tickets') return <TicketsView />
+  if (activePage === 'plans') return <PlansView />
+  if (activePage === 'customer-360') return <Customer360View />
+  if (activePage === 'chat') return <ChatView />
 
-        {/* Evolução dos KPIs */}
-        <KpiEvolutionChart />
-
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <KpiCards />
-        </div>
-      </div>
-    </main>
-  )
+  return null
 }
