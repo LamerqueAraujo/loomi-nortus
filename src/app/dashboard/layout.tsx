@@ -1,10 +1,15 @@
 import SidebarClient from '@/components/layout/SidebarClient'
+import TopBar from '@/components/layout/TopBar'
 
-export default async function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
-    <div className="flex bg-[#0B1125] min-h-screen text-white">
+    <div className="flex bg-[#0B1125] text-white min-h-screen">
       <SidebarClient />
-      <div className="flex flex-col flex-1">{children}</div>
+
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <TopBar />
+        <main className="p-8">{children}</main>
+      </div>
     </div>
   )
 }

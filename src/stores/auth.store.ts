@@ -1,49 +1,54 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
-import path from 'path'
 
-export const useAuthStore = create((set) => ({
-  token: null,
+type AuthState = {
+  accessToken: string | null
+  username: string | null
+  authenticated: boolean
+
+  setAuth: (data: {
+    accessToken: string
+    username: string
+    refreshToken: string
+  }) => void
+
+  clearAuth: () => void
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  accessToken: null,
   username: null,
   authenticated: false,
 
-  loadFromStorage: () => {
-    const token = Cookies.get('token')
-    const username = localStorage.getItem('username')
-
-    if (token && username) {
-      set({
-        token,
-        username,
-        authenticated: true,
-      })
-    }
-  },
-
-  // Login bem-sucedido
-  setAuth: (token, username) => {
-    Cookies.set('token', token, {
+  setAuth: ({ accessToken, username, refreshToken }) => {
+    Cookies.set('token', accessToken, {
       expires: 1,
-      path: '/',
       sameSite: 'strict',
-      secure: false,
+      path: '/',
     })
+
+    Cookies.set('refreshToken', refreshToken, {
+      expires: 7,
+      sameSite: 'strict',
+      path: '/',
+    })
+
     localStorage.setItem('username', username)
 
     set({
-      token,
+      accessToken,
       username,
       authenticated: true,
     })
   },
 
-  // Logout
   clearAuth: () => {
-    Cookies.remove('token', { path: '/' })
+    Cookies.remove('token')
+    Cookies.remove('refreshToken')
     localStorage.removeItem('username')
 
     set({
-      token: null,
+      accessToken: null,
       username: null,
       authenticated: false,
     })

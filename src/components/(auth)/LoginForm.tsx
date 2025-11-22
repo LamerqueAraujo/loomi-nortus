@@ -49,9 +49,24 @@ export default function LoginForm() {
 
     try {
       const { data } = await axios.get('/login.json')
-      const { accessToken, username: user } = data.data
 
-      setAuth(accessToken, user)
+      const accessToken = data?.data?.accessToken
+      const user = data?.data?.username
+
+      if (!accessToken || !user) {
+        console.error('Login API retornou dados incompletos:', data)
+        toast.error('Erro inesperado. Tente novamente.')
+        return
+      }
+
+      const refreshToken = data?.data?.refreshToken ?? crypto.randomUUID()
+
+      // Salva no estado
+      setAuth({
+        accessToken,
+        refreshToken,
+        username: user,
+      })
 
       if (rememberUser) {
         localStorage.setItem('rememberEmail', username)
