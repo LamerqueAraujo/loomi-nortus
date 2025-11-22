@@ -1,8 +1,8 @@
 'use client'
 
 import { useUIStore } from '@/stores/ui.store'
-import { cn } from '@/lib/utils'
-import { NAV_ITEMS } from '@/components/layout/NavItems'
+import { cn } from '@/lib/cn'
+import { NAV_ITEMS } from '@/data/navsItems'
 
 export function Sidebar() {
   const activePage = useUIStore((s) => s.activePage)

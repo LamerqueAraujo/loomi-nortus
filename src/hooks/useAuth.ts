@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth.store'
 import { loginRequest } from '@/services/auth.service'
+import type { LoginResponse } from '@/types/auth'
 
 export function useAuth() {
   const router = useRouter()
@@ -11,7 +12,7 @@ export function useAuth() {
 
   async function login(username: string, password: string) {
     try {
-      const data = await loginRequest(username, password)
+      const data: LoginResponse = await loginRequest(username, password)
 
       setAuth({
         accessToken: data.accessToken,

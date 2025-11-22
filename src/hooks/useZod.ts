@@ -1,22 +1,25 @@
 import { useState } from 'react'
 import { ZodSchema, ZodError } from 'zod'
 
-export function useZodForm<T>(schema: ZodSchema<T>) {
-  const [errors, setErrors] = useState<Record<string, string>>({})
+export function useZodForm<T extends Record<string, unknown>>(
+  schema: ZodSchema<T>,
+) {
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
 
   const validate = (data: unknown): T | null => {
     try {
       const parsed = schema.parse(data)
       setErrors({})
       return parsed
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const formattedErrors: Record<string, string> = {}
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const formattedErrors: Partial<Record<keyof T, string>> = {}
 
-        // ⚠️ USAR safeParse EVITA QUALQUER ERRO
-        err.issues?.forEach((issue) => {
-          const field = issue.path[0]
-          if (field) formattedErrors[field] = issue.message
+        error.issues.forEach((issue) => {
+          const field = issue.path[0] as keyof T
+          if (field) {
+            formattedErrors[field] = issue.message
+          }
         })
 
         setErrors(formattedErrors)
@@ -26,11 +29,11 @@ export function useZodForm<T>(schema: ZodSchema<T>) {
     }
   }
 
-  const clearFieldError = (field: string) => {
+  const clearFieldError = (field: keyof T) => {
     setErrors((prev) => {
-      const newErrors = { ...prev }
-      delete newErrors[field]
-      return newErrors
+      const next = { ...prev }
+      delete next[field]
+      return next
     })
   }
 
