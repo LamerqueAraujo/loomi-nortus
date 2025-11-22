@@ -2,35 +2,16 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import axios from '@/services/api'
-
-type Ticket = {
-  id: string
-  priority: string
-  client: string
-  email: string
-  subject: string
-  status: string
-  createdAt: string
-  responsible: string
-}
-
-type TicketApiResponse = {
-  resumo: {
-    open: number
-    inProgress: number
-    solved: number
-    timeAverageHours: number
-  }
-  status: string[]
-  priorities: string[]
-  tickets: Ticket[]
-}
+import SummaryCard from '@/components/tickets/SummaryCard'
+import Select from '@/components/tickets/Select'
+import { Th, Td } from '@/components/tickets/TicketTable'
+import type { TicketApiResponse } from '@/types/tickets'
 
 export default function TicketsView() {
   const [data, setData] = useState<TicketApiResponse | null>(null)
-  const [statusFilter, setStatusFilter] = useState<string>('Todos')
-  const [priorityFilter, setPriorityFilter] = useState<string>('Todos')
-  const [responsibleFilter, setResponsibleFilter] = useState<string>('Todos')
+  const [statusFilter, setStatusFilter] = useState('Todos')
+  const [priorityFilter, setPriorityFilter] = useState('Todos')
+  const [responsibleFilter, setResponsibleFilter] = useState('Todos')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -50,21 +31,24 @@ export default function TicketsView() {
 
   const responsibles = useMemo(() => {
     if (!data) return []
-    const unique = Array.from(new Set(data.tickets.map((t) => t.responsible)))
-    return unique
+    return Array.from(new Set(data.tickets.map((t) => t.responsible)))
   }, [data])
 
   const filteredTickets = useMemo(() => {
     if (!data) return []
+
     return data.tickets.filter((t) => {
       const statusOk =
         statusFilter === 'Todos' ||
         t.status.toLowerCase() === statusFilter.toLowerCase()
+
       const priorityOk =
         priorityFilter === 'Todos' ||
         t.priority.toLowerCase() === priorityFilter.toLowerCase()
+
       const responsibleOk =
         responsibleFilter === 'Todos' || t.responsible === responsibleFilter
+
       return statusOk && priorityOk && responsibleOk
     })
   }, [data, statusFilter, priorityFilter, responsibleFilter])
@@ -79,6 +63,7 @@ export default function TicketsView() {
 
   return (
     <div className="space-y-6">
+      {/* header */}
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Gestão de Tickets</h1>
@@ -87,15 +72,12 @@ export default function TicketsView() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="rounded-xl bg-[#2563eb] px-4 py-2 text-sm font-medium hover:brightness-110"
-        >
+        <button className="rounded-xl bg-[#2563eb] px-4 py-2 text-sm font-medium hover:brightness-110">
           + Novo ticket
         </button>
       </header>
 
-      {/* Resumo */}
+      {/* resumo */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <SummaryCard label="Abertos" value={data.resumo.open} />
         <SummaryCard label="Em andamento" value={data.resumo.inProgress} />
@@ -106,7 +88,7 @@ export default function TicketsView() {
         />
       </div>
 
-      {/* Filtros */}
+      {/* filtros */}
       <div className="flex flex-wrap gap-4 items-center">
         <Select
           label="Status"
@@ -114,12 +96,14 @@ export default function TicketsView() {
           onChange={setStatusFilter}
           options={['Todos', ...data.status]}
         />
+
         <Select
           label="Prioridade"
           value={priorityFilter}
           onChange={setPriorityFilter}
           options={['Todos', ...data.priorities]}
         />
+
         <Select
           label="Responsável"
           value={responsibleFilter}
@@ -128,7 +112,7 @@ export default function TicketsView() {
         />
       </div>
 
-      {/* Tabela */}
+      {/* tabela */}
       <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#020617]">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-white/5 text-white/60">
@@ -142,6 +126,7 @@ export default function TicketsView() {
               <Th>Criado em</Th>
             </tr>
           </thead>
+
           <tbody>
             {filteredTickets.map((t) => (
               <tr
@@ -155,10 +140,8 @@ export default function TicketsView() {
                   </span>
                 </Td>
                 <Td>
-                  <div>
-                    <p>{t.client}</p>
-                    <p className="text-xs text-white/50">{t.email}</p>
-                  </div>
+                  <p>{t.client}</p>
+                  <p className="text-xs text-white/50">{t.email}</p>
                 </Td>
                 <Td>{t.subject}</Td>
                 <Td>{t.status}</Td>
@@ -180,61 +163,5 @@ export default function TicketsView() {
         </table>
       </div>
     </div>
-  )
-}
-
-function SummaryCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-[#020617] px-4 py-3">
-      <p className="text-xs text-white/60">{label}</p>
-      <p className="text-xl font-semibold mt-1">{value}</p>
-    </div>
-  )
-}
-
-function Select({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  options: string[]
-}) {
-  return (
-    <label className="flex flex-col gap-1 text-xs text-white/60">
-      {label}
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="rounded-xl bg-[#020617] border border-white/10 px-3 py-2 text-sm text-white"
-      >
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
-    </label>
-  )
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-4 py-3 text-xs font-medium uppercase">{children}</th>
-}
-
-function Td({
-  children,
-  colSpan,
-}: {
-  children: React.ReactNode
-  colSpan?: number
-}) {
-  return (
-    <td className="px-4 py-3 align-top text-sm" colSpan={colSpan}>
-      {children}
-    </td>
   )
 }

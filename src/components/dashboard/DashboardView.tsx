@@ -1,27 +1,28 @@
 'use client'
 
-import KpiCards from './KpiCards'
-import KpiEvolutionChart from './KpiEvolutionChart'
-import ImpactChart from './ImpactChart'
 import SegmentButtons from './SegmentButtons'
-import RegionMap from './RegionMap'
+import KpiEvolutionChart from './charts/KpiEvolutionChart'
+import KpiCards from './kpis/KpiCards'
+import RegionMap from './maps/RegionMap'
+import ImpactChart from './charts/ImpactChart'
 
 export default function DashboardView() {
   return (
-    <div className="space-y-8">
-      {/* Evolução dos KPIs */}
-      <KpiEvolutionChart />
+    <div className="space-y-10">
+      <SegmentButtons />
 
-      {/* Cards principais */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <section>
+        <KpiEvolutionChart />
+      </section>
+
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <KpiCards />
-      </div>
+      </section>
 
-      {/* Linha inferior: mapa + impacto */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <RegionMap />
         <ImpactChart />
-      </div>
+      </section>
     </div>
   )
 }

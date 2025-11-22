@@ -1,6 +1,6 @@
 'use client'
 
-const segments = [
+const SEGMENTS: string[] = [
   'Automóvel',
   'Residencial',
   'Viagem',
@@ -11,9 +11,9 @@ const segments = [
 export default function SegmentButtons() {
   return (
     <div className="flex flex-wrap gap-2">
-      {segments.map((s) => (
+      {SEGMENTS.map((segment) => (
         <button
-          key={s}
+          key={segment}
           className="
             px-3 py-1 rounded-lg text-sm
             bg-[#0f172a] text-white/60
@@ -22,7 +22,7 @@ export default function SegmentButtons() {
             transition
           "
         >
-          {s}
+          {segment}
         </button>
       ))}
     </div>

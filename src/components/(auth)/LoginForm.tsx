@@ -1,87 +1,55 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import axios from '@/services/api'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/useAuth'
 import CustomCheckbox from '@/components/ui/CustomCheckbox'
-import { loginSchema } from '@/schemas/login'
 import { useZodForm } from '@/hooks/useZod'
+import { loginSchema } from '@/schemas/login'
 import { Eye, EyeOff } from 'lucide-react'
 
 export default function LoginForm() {
-  const router = useRouter()
-  const { setAuth } = useAuthStore()
+  const { login } = useAuth()
   const { validate, errors, clearFieldError } = useZodForm(loginSchema)
-  const [rememberUser, setRememberUser] = useState(false)
-  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  const usernameRef = useRef<HTMLInputElement | null>(null)
   const [userFocused, setUserFocused] = useState(false)
+  const usernameRef = useRef<HTMLInputElement | null>(null)
+  const [username, setUsername] = useState(() =>
+    typeof window !== 'undefined'
+      ? (localStorage.getItem('rememberEmail') ?? '')
+      : '',
+  )
+  const [rememberUser, setRememberUser] = useState(() =>
+    typeof window !== 'undefined'
+      ? !!localStorage.getItem('rememberEmail')
+      : false,
+  )
+
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem('rememberEmail')
-
-    if (savedEmail) {
-      setUsername(savedEmail)
-      setRememberUser(true)
-    }
-
-    if (usernameRef.current?.value && !savedEmail) {
-      setUsername(usernameRef.current.value)
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHydrated(true)
   }, [])
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
+  if (!hydrated) return null
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
 
-    const validated = validate({ username, password, rememberUser })
-    if (!validated) {
-      toast.error('Verifique os campos acima.')
-      return
-    }
+    if (!validate({ username, password, rememberUser })) return
 
     setLoading(true)
 
-    try {
-      const { data } = await axios.get('/login.json')
+    await login(username, password)
 
-      const accessToken = data?.data?.accessToken
-      const user = data?.data?.username
-
-      if (!accessToken || !user) {
-        console.error('Login API retornou dados incompletos:', data)
-        toast.error('Erro inesperado. Tente novamente.')
-        return
-      }
-
-      const refreshToken = data?.data?.refreshToken ?? crypto.randomUUID()
-
-      // Salva no estado
-      setAuth({
-        accessToken,
-        refreshToken,
-        username: user,
-      })
-
-      if (rememberUser) {
-        localStorage.setItem('rememberEmail', username)
-      } else {
-        localStorage.removeItem('rememberEmail')
-      }
-
-      toast.success('Login realizado com sucesso!')
-      setTimeout(() => router.push('/dashboard'), 800)
-    } catch (err) {
-      console.error(err)
-      toast.error('Erro ao fazer login. Tente novamente.')
-    } finally {
-      setLoading(false)
+    if (rememberUser) {
+      localStorage.setItem('rememberEmail', username)
+    } else {
+      localStorage.removeItem('rememberEmail')
     }
+
+    setLoading(false)
   }
 
   return (
@@ -112,16 +80,15 @@ export default function LoginForm() {
           onBlur={() => setUserFocused(false)}
           onChange={(e) => {
             setUsername(e.target.value)
-            clearFieldError('username', e.target.value)
+            clearFieldError('username')
           }}
           className={`
-    h-[60px]                       /* altura fixa */
-    rounded-[20px] border border-[#E3E3E3] bg-transparent
-    pl-6 pr-6 text-[18px] text-[#E3E3E3] focus:outline-none
-    transition-all duration-300
-      
-    ${username || userFocused ? 'w-[50%]' : 'w-full'}
-  `}
+            h-[60px]
+            rounded-[20px] border border-[#E3E3E3] bg-transparent
+            pl-6 pr-6 text-[18px] text-[#E3E3E3] focus:outline-none
+            transition-all duration-300
+            ${username || userFocused ? 'w-[50%]' : 'w-full'}
+          `}
         />
       </div>
 
@@ -155,7 +122,7 @@ export default function LoginForm() {
           required
           onChange={(e) => {
             setPassword(e.target.value)
-            clearFieldError('password', e.target.value)
+            clearFieldError('password')
           }}
           className="w-full rounded-[20px] border border-[#E3E3E3]
                      bg-transparent py-5 pl-6 pr-12 text-[18px]
@@ -174,7 +141,6 @@ export default function LoginForm() {
                        scale-0 group-hover:scale-[1.6] transition-transform duration-200"
           />
 
-          {/* Ícones */}
           {showPassword ? (
             <EyeOff size={22} className="relative z-10" />
           ) : (
@@ -192,7 +158,9 @@ export default function LoginForm() {
           id="remember-user"
           label="Lembrar meu usuário"
           checked={rememberUser}
-          onChange={(e) => setRememberUser(e.target.checked)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setRememberUser(e.target.checked)
+          }
         />
 
         <button

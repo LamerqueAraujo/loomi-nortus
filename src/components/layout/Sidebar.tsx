@@ -1,22 +1,8 @@
 'use client'
 
 import { useUIStore } from '@/stores/ui.store'
-import {
-  LayoutDashboard,
-  Ticket,
-  Layers,
-  UserSquare2,
-  MessageCircle,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-
-const navItems = [
-  { page: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { page: 'tickets', icon: Ticket, label: 'Tickets' },
-  { page: 'plans', icon: Layers, label: 'Simulador' },
-  { page: 'customer-360', icon: UserSquare2, label: 'Visão 360º' },
-  { page: 'chat', icon: MessageCircle, label: 'Chat' },
-]
+import { cn } from '@/lib/cn'
+import { NAV_ITEMS } from '@/data/navsItems'
 
 export function Sidebar() {
   const activePage = useUIStore((s) => s.activePage)
@@ -46,7 +32,7 @@ export function Sidebar() {
 
         {/* Navegação SPA */}
         <nav className="flex flex-col items-center gap-3">
-          {navItems.map((item) => {
+          {NAV_ITEMS.map((item) => {
             const Icon = item.icon
             const isActive = activePage === item.page
 
@@ -75,7 +61,7 @@ export function Sidebar() {
         </nav>
       </div>
 
-      {/* Avatar (pode ligar no usuário real depois) */}
+      {/* Avatar */}
       <div className="flex flex-col items-center gap-2">
         <button
           type="button"

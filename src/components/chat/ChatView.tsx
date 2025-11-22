@@ -1,28 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import axios from '@/services/api'
-
-type Message = {
-  id: string
-  author: string
-  content: string
-  timestamp: string
-  type: 'user_message' | 'assistant_message'
-}
-
-type ChatApiResponse = {
-  messages: Message[]
-}
+import { useEffect, useRef, useState } from 'react'
+import api from '@/services/api'
+import type { Message, ChatApiResponse } from '@/types/chat'
 
 export default function ChatView() {
   const [data, setData] = useState<ChatApiResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [data])
 
   useEffect(() => {
     const fetchChat = async () => {
       try {
-        const response = await axios.get('/chat.json')
+        const response = await api.get('/chat.json')
         setData(response.data)
       } catch (err) {
         console.error(err)
@@ -56,6 +50,7 @@ export default function ChatView() {
           {data.messages.map((m) => (
             <Bubble key={m.id} message={m} />
           ))}
+          <div ref={bottomRef} />
         </div>
 
         <div className="mt-4">
@@ -78,12 +73,7 @@ function Bubble({ message }: { message: Message }) {
   const isUser = message.type === 'user_message'
 
   return (
-    <div
-      className={`
-        flex w-full
-        ${isUser ? 'justify-end' : 'justify-start'}
-      `}
-    >
+    <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
         className={`
           max-w-[70%] rounded-2xl px-3 py-2 text-sm

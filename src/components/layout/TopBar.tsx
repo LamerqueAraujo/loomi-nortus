@@ -1,13 +1,16 @@
 'use client'
 
 import { useAuthStore } from '@/stores/auth.store'
+import type { TopBarProps } from '@/types/ui/topbar'
 
-export default function TopBar() {
+export function TopBar({ title = 'Dashboard' }: TopBarProps) {
   const user = useAuthStore((s) => s.username)
   const displayName = user ?? 'Usuário'
+
   const initials = displayName
     .split(' ')
-    .map((p) => p[0])
+    .filter((p: string) => p.trim().length > 0)
+    .map((p: string) => p[0])
     .join('')
     .slice(0, 2)
     .toUpperCase()
@@ -26,7 +29,7 @@ export default function TopBar() {
       "
     >
       <h1 className="text-white text-lg font-semibold tracking-wide">
-        Dashboard
+        {title}
       </h1>
 
       <div className="flex items-center gap-4">

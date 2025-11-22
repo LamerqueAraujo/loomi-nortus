@@ -2,20 +2,10 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import axios from '@/services/api'
+import type { PlanApiResponse, ExtraCoverage } from '@/types/plan'
+import SliderField from './SliderField'
 
-type PlanIndicator = {
-  name: string
-  conversion: number
-  roi: number
-  value: number
-}
-
-type PlanApiResponse = {
-  includedBenefits: string[]
-  plansIndicators: PlanIndicator[]
-}
-
-const extras = [
+const extras: ExtraCoverage[] = [
   { id: 'glass', label: 'Cobertura de vidros', price: 15.9 },
   { id: 'car-reserve', label: 'Carro reserva', price: 29.9 },
   { id: 'third-party', label: 'Danos a terceiros', price: 39.9 },
@@ -25,9 +15,9 @@ export default function PlansView() {
   const [data, setData] = useState<PlanApiResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const [selectedPlan, setSelectedPlan] = useState<string>('Básico')
-  const [vehicleValue, setVehicleValue] = useState<number>(50000)
-  const [age, setAge] = useState<number>(30)
+  const [selectedPlan, setSelectedPlan] = useState('Básico')
+  const [vehicleValue, setVehicleValue] = useState(50000)
+  const [age, setAge] = useState(30)
   const [selectedExtras, setSelectedExtras] = useState<string[]>([])
 
   useEffect(() => {
@@ -59,8 +49,9 @@ export default function PlansView() {
   )
 
   const basePrice = plan?.value ?? 0
+
   const riskFactor = useMemo(() => {
-    const vehicleFactor = vehicleValue / 100000 // 0 a ~2
+    const vehicleFactor = vehicleValue / 100000
     const ageFactor = age < 25 ? 1.2 : age < 40 ? 1 : 0.9
     return vehicleFactor * ageFactor
   }, [vehicleValue, age])
@@ -70,24 +61,19 @@ export default function PlansView() {
     [basePrice, riskFactor, extrasTotal],
   )
 
-  if (loading) {
+  if (loading)
     return <p className="text-sm text-white/60">Carregando simulador...</p>
-  }
-
-  if (!data) {
+  if (!data)
     return <p className="text-sm text-red-400">Falha ao carregar planos.</p>
-  }
 
   return (
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Simulador de Planos</h1>
         <p className="text-sm text-white/60">
-          Ajuste os parâmetros para encontrar a melhor recomendação para o
-          cliente.
+          Ajuste os parâmetros para encontrar a melhor recomendação.
         </p>
       </header>
-
       {/* Seleção de plano */}
       <div className="flex flex-wrap gap-4">
         {data.plansIndicators.map((p) => (
@@ -211,46 +197,6 @@ export default function PlansView() {
             <li>Aplica extras escolhidos de forma incremental</li>
           </ul>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function SliderField({
-  label,
-  min,
-  max,
-  step,
-  value,
-  onChange,
-  format,
-}: {
-  label: string
-  min: number
-  max: number
-  step: number
-  value: number
-  onChange: (v: number) => void
-  format: (v: number) => string
-}) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-xs text-white/60">
-        <span>{label}</span>
-        <span className="text-white/80">{format(value)}</span>
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full"
-      />
-      <div className="flex justify-between text-[10px] text-white/40">
-        <span>{format(min)}</span>
-        <span>{format(max)}</span>
       </div>
     </div>
   )
