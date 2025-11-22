@@ -6,15 +6,20 @@ import TicketsView from '@/components/tickets/TicketsView'
 import PlansView from '@/components/plans/PlansView'
 import Customer360View from '@/components/customer360/Customer360View'
 import ChatView from '@/components/chat/ChatView'
+import { DashboardPageKey } from '@/types/dashboard'
+
+const views = {
+  dashboard: DashboardView,
+  tickets: TicketsView,
+  plans: PlansView,
+  'customer-360': Customer360View,
+  chat: ChatView,
+}
 
 export default function DashboardPage() {
-  const activePage = useUIStore((s) => s.activePage)
+  const activePage: DashboardPageKey = useUIStore((s) => s.activePage)
 
-  if (activePage === 'dashboard') return <DashboardView />
-  if (activePage === 'tickets') return <TicketsView />
-  if (activePage === 'plans') return <PlansView />
-  if (activePage === 'customer-360') return <Customer360View />
-  if (activePage === 'chat') return <ChatView />
+  const View = views[activePage]
 
-  return null
+  return View ? <View /> : null
 }

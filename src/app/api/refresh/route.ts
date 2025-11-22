@@ -9,23 +9,15 @@ export async function GET() {
     return NextResponse.json({ error: 'NO_REFRESH' }, { status: 401 })
   }
 
+  // Mock de validação
   const isValid = true
-
   if (!isValid) {
     return NextResponse.json({ error: 'INVALID_REFRESH' }, { status: 401 })
   }
 
   const newAccessToken = crypto.randomUUID() + '_access'
 
-  const res = NextResponse.json({
+  return NextResponse.json({
     accessToken: newAccessToken,
   })
-
-  // Atualiza cookie
-  res.cookies.set('token', newAccessToken, {
-    sameSite: 'strict',
-    path: '/',
-  })
-
-  return res
 }

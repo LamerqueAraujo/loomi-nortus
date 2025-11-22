@@ -6,6 +6,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --auth-bg: #0A0A0A;
+  --bg-auth: #0B1125;
 }
 
 html,

@@ -1,26 +1,13 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
-
-type AuthState = {
-  accessToken: string | null
-  username: string | null
-  authenticated: boolean
-
-  setAuth: (data: {
-    accessToken: string
-    username: string
-    refreshToken: string
-  }) => void
-
-  clearAuth: () => void
-}
+import type { AuthState } from '@/types/auth'
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   username: null,
   authenticated: false,
 
-  setAuth: ({ accessToken, username, refreshToken }) => {
+  setAuth: ({ accessToken, refreshToken, username }) => {
     Cookies.set('token', accessToken, {
       expires: 1,
       sameSite: 'strict',

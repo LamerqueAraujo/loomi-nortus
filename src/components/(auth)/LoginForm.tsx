@@ -1,87 +1,51 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import axios from '@/services/api'
-import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/useAuth'
 import CustomCheckbox from '@/components/ui/CustomCheckbox'
-import { loginSchema } from '@/schemas/login'
 import { useZodForm } from '@/hooks/useZod'
+import { loginSchema } from '@/schemas/login'
 import { Eye, EyeOff } from 'lucide-react'
 
 export default function LoginForm() {
-  const router = useRouter()
-  const { setAuth } = useAuthStore()
+  const { login } = useAuth()
   const { validate, errors, clearFieldError } = useZodForm(loginSchema)
-  const [rememberUser, setRememberUser] = useState(false)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberUser, setRememberUser] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const usernameRef = useRef<HTMLInputElement | null>(null)
-  const [userFocused, setUserFocused] = useState(false)
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('rememberEmail')
-
     if (savedEmail) {
       setUsername(savedEmail)
       setRememberUser(true)
     }
-
-    if (usernameRef.current?.value && !savedEmail) {
-      setUsername(usernameRef.current.value)
-    }
   }, [])
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
 
-    const validated = validate({ username, password, rememberUser })
-    if (!validated) {
-      toast.error('Verifique os campos acima.')
-      return
-    }
+    if (!validate({ username, password, rememberUser })) return
 
     setLoading(true)
 
-    try {
-      const { data } = await axios.get('/login.json')
+    await login(username, password)
 
-      const accessToken = data?.data?.accessToken
-      const user = data?.data?.username
-
-      if (!accessToken || !user) {
-        console.error('Login API retornou dados incompletos:', data)
-        toast.error('Erro inesperado. Tente novamente.')
-        return
-      }
-
-      const refreshToken = data?.data?.refreshToken ?? crypto.randomUUID()
-
-      // Salva no estado
-      setAuth({
-        accessToken,
-        refreshToken,
-        username: user,
-      })
-
-      if (rememberUser) {
-        localStorage.setItem('rememberEmail', username)
-      } else {
-        localStorage.removeItem('rememberEmail')
-      }
-
-      toast.success('Login realizado com sucesso!')
-      setTimeout(() => router.push('/dashboard'), 800)
-    } catch (err) {
-      console.error(err)
-      toast.error('Erro ao fazer login. Tente novamente.')
-    } finally {
-      setLoading(false)
+    if (rememberUser) {
+      localStorage.setItem('rememberEmail', username)
+    } else {
+      localStorage.removeItem('rememberEmail')
     }
+
+    setLoading(false)
+  }
+
+  function setUserFocused(arg0: boolean): void {
+    throw new Error('Function not implemented.')
   }
 
   return (
