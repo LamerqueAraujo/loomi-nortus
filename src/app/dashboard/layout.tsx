@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import SidebarClient from '@/components/layout/SidebarClient'
-import TopBar from '@/components/layout/TopBar'
+import { TopBar } from '@/components/layout/TopBar'
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (

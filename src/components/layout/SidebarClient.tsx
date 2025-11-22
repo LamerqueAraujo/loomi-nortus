@@ -2,6 +2,8 @@
 
 import { Sidebar } from './Sidebar'
 
-export default function SidebarClient() {
+export function SidebarClient() {
   return <Sidebar />
 }
+
+export default SidebarClient
