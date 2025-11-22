@@ -10,22 +10,30 @@ import { Eye, EyeOff } from 'lucide-react'
 export default function LoginForm() {
   const { login } = useAuth()
   const { validate, errors, clearFieldError } = useZodForm(loginSchema)
-
-  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [rememberUser, setRememberUser] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [userFocused, setUserFocused] = useState(false)
   const usernameRef = useRef<HTMLInputElement | null>(null)
+  const [username, setUsername] = useState(() =>
+    typeof window !== 'undefined'
+      ? (localStorage.getItem('rememberEmail') ?? '')
+      : '',
+  )
+  const [rememberUser, setRememberUser] = useState(() =>
+    typeof window !== 'undefined'
+      ? !!localStorage.getItem('rememberEmail')
+      : false,
+  )
+
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem('rememberEmail')
-    if (savedEmail) {
-      setUsername(savedEmail)
-      setRememberUser(true)
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHydrated(true)
   }, [])
 
+  if (!hydrated) return null
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
@@ -42,10 +50,6 @@ export default function LoginForm() {
     }
 
     setLoading(false)
-  }
-
-  function setUserFocused(arg0: boolean): void {
-    throw new Error('Function not implemented.')
   }
 
   return (
@@ -76,16 +80,15 @@ export default function LoginForm() {
           onBlur={() => setUserFocused(false)}
           onChange={(e) => {
             setUsername(e.target.value)
-            clearFieldError('username', e.target.value)
+            clearFieldError('username')
           }}
           className={`
-    h-[60px]                       /* altura fixa */
-    rounded-[20px] border border-[#E3E3E3] bg-transparent
-    pl-6 pr-6 text-[18px] text-[#E3E3E3] focus:outline-none
-    transition-all duration-300
-      
-    ${username || userFocused ? 'w-[50%]' : 'w-full'}
-  `}
+            h-[60px]
+            rounded-[20px] border border-[#E3E3E3] bg-transparent
+            pl-6 pr-6 text-[18px] text-[#E3E3E3] focus:outline-none
+            transition-all duration-300
+            ${username || userFocused ? 'w-[50%]' : 'w-full'}
+          `}
         />
       </div>
 
@@ -119,7 +122,7 @@ export default function LoginForm() {
           required
           onChange={(e) => {
             setPassword(e.target.value)
-            clearFieldError('password', e.target.value)
+            clearFieldError('password')
           }}
           className="w-full rounded-[20px] border border-[#E3E3E3]
                      bg-transparent py-5 pl-6 pr-12 text-[18px]
@@ -138,7 +141,6 @@ export default function LoginForm() {
                        scale-0 group-hover:scale-[1.6] transition-transform duration-200"
           />
 
-          {/* Ícones */}
           {showPassword ? (
             <EyeOff size={22} className="relative z-10" />
           ) : (
@@ -156,7 +158,9 @@ export default function LoginForm() {
           id="remember-user"
           label="Lembrar meu usuário"
           checked={rememberUser}
-          onChange={(e) => setRememberUser(e.target.checked)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setRememberUser(e.target.checked)
+          }
         />
 
         <button

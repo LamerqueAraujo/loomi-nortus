@@ -1,9 +1,7 @@
 export type LoginResponse = {
-  data: {
-    accessToken: string
-    username: string
-    refreshToken?: string
-  }
+  accessToken: string
+  username: string
+  refreshToken?: string
 }
 
 export type RefreshResponse = {

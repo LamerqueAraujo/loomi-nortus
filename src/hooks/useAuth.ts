@@ -11,7 +11,7 @@ export function useAuth() {
 
   async function login(username: string, password: string) {
     try {
-      const { data } = await loginRequest(username, password)
+      const data = await loginRequest(username, password)
 
       setAuth({
         accessToken: data.accessToken,

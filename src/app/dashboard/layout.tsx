@@ -4,7 +4,7 @@ import TopBar from '@/components/layout/TopBar'
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex bg-[var(--bg-auth)] text-white min-h-screen">
+    <div className="flex bg-[#0B1125] text-white min-h-screen">
       <SidebarClient />
 
       <div className="flex flex-col flex-1 overflow-hidden">

@@ -8,7 +8,7 @@ import Customer360View from '@/components/customer360/Customer360View'
 import ChatView from '@/components/chat/ChatView'
 import { DashboardPageKey } from '@/types/dashboard'
 
-const views = {
+const views: Record<DashboardPageKey, React.ComponentType> = {
   dashboard: DashboardView,
   tickets: TicketsView,
   plans: PlansView,

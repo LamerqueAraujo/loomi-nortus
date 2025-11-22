@@ -1,23 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Headphones, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 
+type Lang = 'pt' | 'en'
+
 export function TopBarLogin() {
   const [open, setOpen] = useState(false)
-  const [language, setLanguage] = useState<'pt' | 'en'>('pt')
 
-  // Carrega idioma salvo (sem setState dentro do efeito)
-  useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved === 'pt' || saved === 'en') {
-      // Ajuste correto — usando microtask para evitar alerta do React
-      queueMicrotask(() => setLanguage(saved))
+  const [language, setLanguage] = useState<Lang>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('language')
+      if (saved === 'pt' || saved === 'en') return saved
     }
-  }, [])
+    return 'pt'
+  })
 
-  const changeLanguage = (lang: 'pt' | 'en') => {
+  const changeLanguage = (lang: Lang) => {
     setLanguage(lang)
     localStorage.setItem('language', lang)
     setOpen(false)
@@ -33,13 +33,10 @@ export function TopBarLogin() {
         px-6 py-6
       "
     >
-      {/* ============================
-          BOTÃO AJUDA
-      ============================= */}
       <button
         className="
           flex items-center gap-2
-          w-[130px]         /* largura fixa */
+          w-[130px]
           justify-center
           px-6 py-3
           rounded-full
@@ -52,15 +49,12 @@ export function TopBarLogin() {
         Ajuda
       </button>
 
-      {/* ============================
-          IDIOMA
-      ============================= */}
       <div className="relative">
         <button
           onClick={() => setOpen(!open)}
           className="
             flex items-center gap-2
-            w-[130px]           /* largura fixa */
+            w-[130px]
             justify-center
             px-6 py-3
             rounded-full
@@ -82,7 +76,6 @@ export function TopBarLogin() {
           <ChevronDown size={16} className="text-white/70" />
         </button>
 
-        {/* Dropdown de idiomas */}
         {open && (
           <div
             className="
@@ -103,13 +96,7 @@ export function TopBarLogin() {
                 w-full whitespace-nowrap
               "
             >
-              <Image
-                src="/flags/br.svg"
-                alt="Brasil"
-                width={18}
-                height={18}
-                className="rounded-full"
-              />
+              <Image src="/flags/br.svg" alt="Brasil" width={18} height={18} />
               PT-br
             </button>
 
@@ -123,13 +110,7 @@ export function TopBarLogin() {
                 w-full whitespace-nowrap
               "
             >
-              <Image
-                src="/flags/usa.svg"
-                alt="USA"
-                width={18}
-                height={18}
-                className="rounded-full"
-              />
+              <Image src="/flags/usa.svg" alt="USA" width={18} height={18} />
               EN-us
             </button>
           </div>

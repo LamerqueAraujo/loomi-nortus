@@ -9,7 +9,6 @@ export async function GET() {
     return NextResponse.json({ error: 'NO_REFRESH' }, { status: 401 })
   }
 
-  // Mock de validação
   const isValid = true
   if (!isValid) {
     return NextResponse.json({ error: 'INVALID_REFRESH' }, { status: 401 })
