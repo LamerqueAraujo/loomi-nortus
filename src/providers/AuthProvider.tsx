@@ -3,12 +3,13 @@
 import { useEffect } from 'react'
 import { useAuthStore } from '@/stores/auth.store'
 
-export function AuthProvider({ children }) {
-  const loadFromStorage = useAuthStore((s) => s.loadFromStorage)
-
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    loadFromStorage()
-  }, [loadFromStorage])
+    const username = localStorage.getItem('username')
+    if (username) {
+      useAuthStore.setState({ username })
+    }
+  }, [])
 
   return <>{children}</>
 }

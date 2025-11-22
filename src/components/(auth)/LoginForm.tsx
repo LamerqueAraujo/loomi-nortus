@@ -24,7 +24,14 @@ export default function LoginForm() {
   const [userFocused, setUserFocused] = useState(false)
 
   useEffect(() => {
-    if (usernameRef.current?.value) {
+    const savedEmail = localStorage.getItem('rememberEmail')
+
+    if (savedEmail) {
+      setUsername(savedEmail)
+      setRememberUser(true)
+    }
+
+    if (usernameRef.current?.value && !savedEmail) {
       setUsername(usernameRef.current.value)
     }
   }, [])
@@ -42,14 +49,29 @@ export default function LoginForm() {
 
     try {
       const { data } = await axios.get('/login.json')
-      const { accessToken, username: user } = data.data
 
-      setAuth(accessToken, user)
+      const accessToken = data?.data?.accessToken
+      const user = data?.data?.username
+
+      if (!accessToken || !user) {
+        console.error('Login API retornou dados incompletos:', data)
+        toast.error('Erro inesperado. Tente novamente.')
+        return
+      }
+
+      const refreshToken = data?.data?.refreshToken ?? crypto.randomUUID()
+
+      // Salva no estado
+      setAuth({
+        accessToken,
+        refreshToken,
+        username: user,
+      })
 
       if (rememberUser) {
-        localStorage.setItem('rememberUser', user)
+        localStorage.setItem('rememberEmail', username)
       } else {
-        localStorage.removeItem('rememberUser')
+        localStorage.removeItem('rememberEmail')
       }
 
       toast.success('Login realizado com sucesso!')
