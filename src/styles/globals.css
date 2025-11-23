@@ -76,6 +76,25 @@ h6 {
   z-index: 5 !important;
 }
 
+.skeleton-chart {
+  height: 260px;
+  width: 100%;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1a2338 0%, #111827 50%, #1a2338 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
