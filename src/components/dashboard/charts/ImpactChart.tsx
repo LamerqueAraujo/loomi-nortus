@@ -1,29 +1,73 @@
 'use client'
 
-import type { ImpactChartProps } from '@/types/dashboard'
+import { useState } from 'react'
+import dynamic from 'next/dynamic'
 
-export default function ImpactChart({
-  title = 'Mapa de impacto por segmento',
-}: ImpactChartProps) {
+import {
+  IMPACT_CHART_OPTIONS,
+  IMPACT_CHART_SERIES,
+} from '@/data/charts/impactCharts'
+import SegmentChip from '@/components/ui/SegmentChip'
+import ImpactChartModal from './ImpactModalContent'
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
+
+export default function ImpactChart() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
-    <div className="w-full h-[400px] rounded-2xl bg-[#111827] border border-white/10 p-6 flex flex-col">
-      <h2 className="text-lg font-semibold mb-4">{title}</h2>
+    <>
+      <section className="w-full rounded-2xl bg-[#111827] border border-white/10 p-6 flex flex-col">
+        {/* título */}
+        <header className="mb-4">
+          <h2 className="text-sm font-semibold text-white">
+            Mapa de impacto por segmento
+          </h2>
+        </header>
 
-      {/* Área do gráfico — substituir quando for implementar */}
-      <div className="flex-1 flex items-center justify-center text-white/40">
-        (Gráfico de impacto)
-      </div>
+        {/* gráfico */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-full max-w-[260px]">
+            <Chart
+              options={IMPACT_CHART_OPTIONS}
+              series={IMPACT_CHART_SERIES}
+              type="donut"
+              height={260}
+            />
+          </div>
+        </div>
 
-      <button
-        type="button"
-        className="
-          mt-4 px-4 py-2 bg-[#1c7ef5]
-          rounded-xl text-sm text-white
-          hover:brightness-110 transition
-        "
-      >
-        Analisar segmentos
-      </button>
-    </div>
+        {/* chips */}
+        <div className="mt-4 flex flex-wrap gap-2 justify-center">
+          <SegmentChip label="Automóvel" />
+          <SegmentChip label="Residencial" />
+          <SegmentChip label="Viagem" />
+          <SegmentChip label="Combo resi + auto" />
+          <SegmentChip label="Profissional" />
+        </div>
+
+        {/* botão */}
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="
+            mt-5 mx-auto px-6 py-2 text-sm font-medium
+            rounded-full
+            bg-[#0B63F6]
+            text-white
+            hover:brightness-110
+            transition
+            shadow-[0_10px_30px_rgba(37,99,235,0.45)]
+          "
+        >
+          Analisar segmentos
+        </button>
+      </section>
+
+      <ImpactChartModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   )
 }
