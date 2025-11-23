@@ -9,13 +9,13 @@ export function ImpactDetails() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-4">Detalhamento por segmento</h2>
+      <h2 className="text-lg font-bold mb-4">Detalhamento por segmento</h2>
 
       <ul className="space-y-3">
         {data.map((item) => (
           <li
             key={item.segmento}
-            className="flex items-center justify-between bg-white/5 p-3 rounded-xl"
+            className="flex items-center justify-between bg-white/5 p-3 rounded-xl cursor-default"
           >
             <div className="flex items-center gap-3">
               <span
@@ -25,7 +25,7 @@ export function ImpactDetails() {
               <span>{item.segmento}</span>
             </div>
 
-            <span className="font-semibold">{item.valor}</span>
+            <span className="font-bold">{item.valor}</span>
           </li>
         ))}
       </ul>
