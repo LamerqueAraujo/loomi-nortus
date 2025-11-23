@@ -5,7 +5,7 @@ import KpiEvolutionChart from './charts/KpiEvolutionChart'
 import KpiCards from './kpis/KpiCards'
 import RegionMap from './maps/RegionMap'
 import ImpactChart from './charts/ImpactChart'
-import ActiveClientsTable from './tables/ActiveClientsTable'
+import ActiveClients from './active-clients/ActiveClients'
 
 export default function DashboardView() {
   return (
@@ -22,7 +22,7 @@ export default function DashboardView() {
         </div>
 
         {/* Tabela abaixo (full width) */}
-        <ActiveClientsTable />
+        <ActiveClients />
       </div>
     </PageContainer>
   )

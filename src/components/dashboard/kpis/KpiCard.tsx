@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import type { Kpi } from '@/types/dashboard'
+import type { Kpi } from '@/types/dashboard/dashboard'
 
 const colorMap: Record<Kpi['trendColor'], string> = {
   'neon-blue': 'text-[#3BA7F3]',

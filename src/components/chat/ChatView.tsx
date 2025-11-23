@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import api from '@/services/api'
-import type { Message, ChatApiResponse } from '@/types/chat'
+import type { Message, ChatApiResponse } from '@/types/dashboard/chat'
 
 export default function ChatView() {
   const [data, setData] = useState<ChatApiResponse | null>(null)

@@ -1,7 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { KpiEvolutionSeries, KpiEvolutionOptions } from '@/types/dashboard'
+import type {
+  KpiEvolutionSeries,
+  KpiEvolutionOptions,
+} from '@/types/dashboard/dashboard'
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 

@@ -6,7 +6,9 @@ import TicketsView from '@/components/tickets/TicketsView'
 import PlansView from '@/components/plans/PlansView'
 import Customer360View from '@/components/customer360/Customer360View'
 import ChatView from '@/components/chat/ChatView'
-import { DashboardPageKey } from '@/types/dashboard'
+import { DashboardPageKey } from '@/types/dashboard/dashboard'
+import { useDashboardStore } from '@/stores/dashboard.store'
+import { useEffect } from 'react'
 
 const views: Record<DashboardPageKey, React.ComponentType> = {
   dashboard: DashboardView,
@@ -18,6 +20,11 @@ const views: Record<DashboardPageKey, React.ComponentType> = {
 
 export default function DashboardPage() {
   const activePage: DashboardPageKey = useUIStore((s) => s.activePage)
+  const fetchData = useDashboardStore((s) => s.fetchData)
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const View = views[activePage]
 
