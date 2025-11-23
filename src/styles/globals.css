@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+@import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 @tailwind utilities;
 
@@ -42,6 +43,37 @@ h4,
 h5,
 h6 {
   font-family: 'Space Grotesk', sans-serif;
+}
+
+.custom-select {
+  background-color: #050816;
+  color: white;
+  padding: 8px 12px;
+  padding-right: 32px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  appearance: none;
+  background-image: url('/icons/arrow-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #2563EB;
+}
+
+/* Diminuir prioridade do Leaflet */
+.leaflet-container {
+  z-index: 1 !important;
+}
+
+/* Forçar tooltips e popups ficarem acima do mapa */
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 5 !important;
 }
 
 @keyframes fadeIn {

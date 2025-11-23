@@ -1,6 +1,7 @@
 'use client'
 
 import type { ActiveClient } from '@/types/dashboard/active-clients'
+import { useEffect, useState } from 'react'
 
 type Props = {
   data: ActiveClient[]
@@ -13,8 +14,26 @@ export default function ActiveClientsTable({
   sortOrder,
   toggleSort,
 }: Props) {
+  const [isChanging, setIsChanging] = useState(false)
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsChanging(true)
+    const timeout = setTimeout(() => setIsChanging(false), 150)
+    return () => clearTimeout(timeout)
+  }, [data])
+
   return (
-    <div className="overflow-x-auto rounded-2xl bg-[#FFFFFF1F] border border-white/5">
+    <div
+      className="
+        overflow-x-auto 
+        rounded-2xl 
+        bg-[#FFFFFF1F] 
+        border border-white/5
+        min-h-[480px]
+        transition-all duration-300
+      "
+    >
       <table className="w-full text-left text-sm text-white/80">
         <thead className="text-xs uppercase text-white/40 border-b border-white/10">
           <tr>
@@ -37,7 +56,12 @@ export default function ActiveClientsTable({
           </tr>
         </thead>
 
-        <tbody>
+        <tbody
+          className={`
+            transition-opacity duration-300 
+            ${isChanging ? 'opacity-40' : 'opacity-100'}
+          `}
+        >
           {data.map((client) => (
             <tr
               key={client.id}

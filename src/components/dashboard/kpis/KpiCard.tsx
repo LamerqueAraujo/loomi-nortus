@@ -24,7 +24,7 @@ export default function KpiCard({
 }: Kpi) {
   return (
     <div className="p-6 rounded-2xl bg-[#FFFFFF0D] border border-white/10 relative min-h-[145px] flex flex-col justify-between">
-      <span className="text-sm text-white/60">{label}</span>
+      <span className="text-sm text-white">{label}</span>
 
       <p className="text-2xl font-bold text-white">{value}</p>
 

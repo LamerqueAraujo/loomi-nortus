@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDashboardStore } from '@/stores/dashboard.store'
 import ActiveClientsTable from './ActiveClientsTable'
+import SelectWithIcon from '@/components/ui/SelectWithIcon' // 👈 importar aqui
 
 export default function ActiveClients() {
   const {
@@ -44,22 +45,25 @@ export default function ActiveClients() {
       return matchesSearch && matchesStatus && matchesType && matchesLocation
     })
 
-    // 👇 ORDENANDO AQUI
-    result = result.sort((a, b) => {
-      return sortOrder === 'asc'
+    result = result.sort((a, b) =>
+      sortOrder === 'asc'
         ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
-    })
+        : b.name.localeCompare(a.name),
+    )
 
     return result
   }, [activeClients, search, status, secureType, location, sortOrder])
+
+  // opções com fallback (evita quebrar enquanto a API não carregou)
+  const statusOptions = activeClientsFilters?.status ?? ['Todos']
+  const typeOptions = activeClientsFilters?.secureType ?? ['Todos']
+  const locationOptions = activeClientsFilters?.locations ?? ['Todos']
 
   return (
     <section className="w-full rounded-2xl bg-[#FFFFFF0D] border border-white/10 px-6 py-8 flex flex-col gap-4">
       <header className="flex flex-col gap-3">
         <h2 className="text-2xl font-semibold text-white">Clientes ativos</h2>
 
-        {/* linha de filtros */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           {/* busca */}
           <div className="flex-1">
@@ -72,36 +76,25 @@ export default function ActiveClients() {
             />
           </div>
 
+          {/* filtros */}
           <div className="flex flex-wrap gap-2">
-            <select
+            <SelectWithIcon
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="rounded-full bg-[#050816] border border-white/10 px-3 py-2 text-xs text-white"
-            >
-              {activeClientsFilters?.status.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+              onChange={setStatus}
+              options={statusOptions}
+            />
 
-            <select
+            <SelectWithIcon
               value={secureType}
-              onChange={(e) => setSecureType(e.target.value)}
-              className="rounded-full bg-[#050816] border border-white/10 px-3 py-2 text-xs text-white"
-            >
-              {activeClientsFilters?.secureType.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+              onChange={setSecureType}
+              options={typeOptions}
+            />
 
-            <select
+            <SelectWithIcon
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="rounded-full bg-[#050816] border border-white/10 px-3 py-2 text-xs text-white"
-            >
-              {activeClientsFilters?.locations.map((opt) => (
-                <option key={opt}>{opt}</option>
-              ))}
-            </select>
+              onChange={setLocation}
+              options={locationOptions}
+            />
           </div>
         </div>
       </header>

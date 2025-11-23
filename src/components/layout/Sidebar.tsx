@@ -18,6 +18,7 @@ export function Sidebar() {
         border-r border-white/5
         py-10
         rounded-tr-[40px]
+        rounded-br-[40px]
         z-[50]
         relative
         shadow-xl shadow-black/60

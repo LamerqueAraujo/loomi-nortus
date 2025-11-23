@@ -11,17 +11,16 @@ export default function DashboardView() {
   return (
     <PageContainer>
       <div className="space-y-10 w-full my-5">
-        <div className="grid gap-10 xl:grid-cols-[1.7fr_1fr] items-stretch">
+        <div className="grid gap-10 xl:grid-cols-[1.7fr_1fr] items-start">
           <KpiEvolutionChart />
           <KpiCards />
         </div>
 
-        <div className="grid gap-10 xl:grid-cols-[1.7fr_1fr] items-stretch">
+        <div className="grid gap-10 xl:grid-cols-[1.7fr_1fr] items-start">
           <RegionMap />
           <ImpactChart />
         </div>
 
-        {/* Tabela abaixo (full width) */}
         <ActiveClients />
       </div>
     </PageContainer>
