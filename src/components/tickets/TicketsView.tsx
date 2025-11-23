@@ -1,167 +1,169 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import axios from '@/services/api'
-import SummaryCard from '@/components/tickets/SummaryCard'
-import Select from '@/components/tickets/Select'
-import { Th, Td } from '@/components/tickets/TicketTable'
-import type { TicketApiResponse } from '@/types/tickets'
+import { useTicketsStore } from '@/stores/tickets.store'
+import { TicketsKpiCards } from './TicketsKpiCards'
+import { TicketsTable } from './TicketsTable'
+import { TicketModal } from './TicketModal'
+import { ViewTicketModal } from './ViewTicketModal'
+import type { Ticket } from '@/types/tickets'
+import type { TicketFormValues } from '@/schemas/tickets'
+import { useNortusToast } from '@/hooks/useNortusToast'
+import PageContainer from '../layout/PageContainer'
 
-export default function TicketsView() {
-  const [data, setData] = useState<TicketApiResponse | null>(null)
-  const [statusFilter, setStatusFilter] = useState('Todos')
-  const [priorityFilter, setPriorityFilter] = useState('Todos')
-  const [responsibleFilter, setResponsibleFilter] = useState('Todos')
-  const [loading, setLoading] = useState(true)
+export function TicketsView() {
+  const { success } = useNortusToast()
+  const {
+    loading,
+    error,
+    resumo,
+    filteredTickets,
+    statusOptions,
+    priorityOptions,
+    responsiblesOptions,
+    filters,
+    page,
+    pageSize,
+    loadTickets,
+    setFilters,
+    setPage,
+    addTicket,
+    updateTicket,
+  } = useTicketsStore()
+
+  const [isCreateEditOpen, setIsCreateEditOpen] = useState(false)
+  const [editingTicket, setEditingTicket] = useState<Ticket | null>(null)
+
+  const [isViewOpen, setIsViewOpen] = useState(false)
+  const [viewTicket, setViewTicket] = useState<Ticket | null>(null)
 
   useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await axios.get('/ticket-management.json')
-        setData(response.data)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
+    loadTickets()
+  }, [loadTickets])
 
-    fetchTickets()
-  }, [])
+  const totalCount = useMemo(() => filteredTickets.length, [filteredTickets])
 
-  const responsibles = useMemo(() => {
-    if (!data) return []
-    return Array.from(new Set(data.tickets.map((t) => t.responsible)))
-  }, [data])
-
-  const filteredTickets = useMemo(() => {
-    if (!data) return []
-
-    return data.tickets.filter((t) => {
-      const statusOk =
-        statusFilter === 'Todos' ||
-        t.status.toLowerCase() === statusFilter.toLowerCase()
-
-      const priorityOk =
-        priorityFilter === 'Todos' ||
-        t.priority.toLowerCase() === priorityFilter.toLowerCase()
-
-      const responsibleOk =
-        responsibleFilter === 'Todos' || t.responsible === responsibleFilter
-
-      return statusOk && priorityOk && responsibleOk
-    })
-  }, [data, statusFilter, priorityFilter, responsibleFilter])
-
-  if (loading) {
-    return <p className="text-sm text-white/60">Carregando tickets...</p>
+  function handleOpenCreate() {
+    setEditingTicket(null)
+    setIsCreateEditOpen(true)
   }
 
-  if (!data) {
-    return <p className="text-sm text-red-400">Falha ao carregar tickets.</p>
+  function handleOpenEdit(ticket: Ticket) {
+    setEditingTicket(ticket)
+    setIsCreateEditOpen(true)
+  }
+
+  function handleOpenView(ticket: Ticket) {
+    setViewTicket(ticket)
+    setIsViewOpen(true)
+  }
+
+  function handleSubmitTicket(values: TicketFormValues) {
+    if (editingTicket) {
+      const updated: Ticket = {
+        ...editingTicket,
+        ...values,
+      }
+      updateTicket(updated)
+      success(
+        'Ticket editado com sucesso!',
+        'O ticket foi editado e já está na sua lista.',
+      )
+    } else {
+      const newTicket: Ticket = {
+        id: `TK${String(Date.now()).slice(-4)}`,
+        createdAt: new Date().toLocaleDateString('pt-BR'),
+        ...values,
+      }
+      addTicket(newTicket)
+      success(
+        'Ticket criado com sucesso!',
+        'O ticket foi criado e já está na sua lista.',
+      )
+    }
+
+    setIsCreateEditOpen(false)
+    setEditingTicket(null)
   }
 
   return (
-    <div className="space-y-6">
-      {/* header */}
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Gestão de Tickets</h1>
-          <p className="text-sm text-white/60">
-            Gerencie tickets por prioridade, status e responsável.
-          </p>
-        </div>
+    <PageContainer>
+      <main className="flex flex-col gap-6">
+        <header className="flex items-center justify-end">
+          <button
+            onClick={handleOpenCreate}
+            className="flex items-center gap-2 rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-sky-400"
+          >
+            + Novo Ticket
+          </button>
+        </header>
 
-        <button className="rounded-xl bg-[#2563eb] px-4 py-2 text-sm font-medium hover:brightness-110">
-          + Novo ticket
-        </button>
-      </header>
+        <TicketsKpiCards resumo={resumo} />
 
-      {/* resumo */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <SummaryCard label="Abertos" value={data.resumo.open} />
-        <SummaryCard label="Em andamento" value={data.resumo.inProgress} />
-        <SummaryCard label="Resolvidos" value={data.resumo.solved} />
-        <SummaryCard
-          label="Tempo médio (h)"
-          value={data.resumo.timeAverageHours}
+        {loading && (
+          <div className="rounded-3xl bg-[#020617] p-6 text-sm text-slate-400">
+            Carregando tickets...
+          </div>
+        )}
+
+        {error && !loading && (
+          <div className="rounded-3xl bg-[#020617] p-6 text-sm text-red-400">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <TicketsTable
+            tickets={filteredTickets}
+            filters={filters}
+            statusOptions={statusOptions}
+            priorityOptions={priorityOptions}
+            responsiblesOptions={responsiblesOptions}
+            page={page}
+            pageSize={pageSize}
+            totalCount={totalCount}
+            onChangeFilters={setFilters}
+            onChangePage={setPage}
+            onEdit={handleOpenEdit}
+            onView={handleOpenView}
+          />
+        )}
+
+        {/* Modal criar/editar */}
+        <TicketModal
+          isOpen={isCreateEditOpen}
+          title={editingTicket ? 'Editar Ticket' : 'Novo Ticket'}
+          onClose={() => {
+            setIsCreateEditOpen(false)
+            setEditingTicket(null)
+          }}
+          onSubmit={handleSubmitTicket}
+          defaultValues={
+            editingTicket
+              ? {
+                  client: editingTicket.client,
+                  email: editingTicket.email,
+                  subject: editingTicket.subject,
+                  priority: editingTicket.priority,
+                  status: editingTicket.status,
+                  responsible: editingTicket.responsible,
+                }
+              : undefined
+          }
+          priorities={priorityOptions}
+          status={statusOptions}
         />
-      </div>
 
-      {/* filtros */}
-      <div className="flex flex-wrap gap-4 items-center">
-        <Select
-          label="Status"
-          value={statusFilter}
-          onChange={setStatusFilter}
-          options={['Todos', ...data.status]}
+        {/* Modal visualizar */}
+        <ViewTicketModal
+          isOpen={isViewOpen}
+          ticket={viewTicket}
+          onClose={() => {
+            setIsViewOpen(false)
+            setViewTicket(null)
+          }}
         />
-
-        <Select
-          label="Prioridade"
-          value={priorityFilter}
-          onChange={setPriorityFilter}
-          options={['Todos', ...data.priorities]}
-        />
-
-        <Select
-          label="Responsável"
-          value={responsibleFilter}
-          onChange={setResponsibleFilter}
-          options={['Todos', ...responsibles]}
-        />
-      </div>
-
-      {/* tabela */}
-      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#020617]">
-        <table className="min-w-full text-left text-sm">
-          <thead className="bg-white/5 text-white/60">
-            <tr>
-              <Th>ID</Th>
-              <Th>Prioridade</Th>
-              <Th>Cliente</Th>
-              <Th>Assunto</Th>
-              <Th>Status</Th>
-              <Th>Responsável</Th>
-              <Th>Criado em</Th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filteredTickets.map((t) => (
-              <tr
-                key={t.id}
-                className="border-t border-white/5 hover:bg-white/5"
-              >
-                <Td>{t.id}</Td>
-                <Td>
-                  <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-white/10">
-                    {t.priority}
-                  </span>
-                </Td>
-                <Td>
-                  <p>{t.client}</p>
-                  <p className="text-xs text-white/50">{t.email}</p>
-                </Td>
-                <Td>{t.subject}</Td>
-                <Td>{t.status}</Td>
-                <Td>{t.responsible}</Td>
-                <Td>{t.createdAt}</Td>
-              </tr>
-            ))}
-
-            {filteredTickets.length === 0 && (
-              <tr>
-                <Td colSpan={7}>
-                  <p className="text-center text-white/60 py-4">
-                    Nenhum ticket encontrado com os filtros selecionados.
-                  </p>
-                </Td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      </main>
+    </PageContainer>
   )
 }

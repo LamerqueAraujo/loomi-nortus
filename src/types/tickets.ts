@@ -1,34 +1,28 @@
+export type TicketPriority = 'Urgente' | 'Média' | 'Baixa'
+
+export type TicketStatus = 'Aberto' | 'Em andamento' | 'Fechado'
+
 export type Ticket = {
   id: string
-  priority: string
+  priority: TicketPriority
   client: string
   email: string
   subject: string
-  status: string
+  status: TicketStatus
   createdAt: string
   responsible: string
 }
 
-export type TicketApiResponse = {
-  resumo: {
-    open: number
-    inProgress: number
-    solved: number
-    timeAverageHours: number
-  }
-  status: string[]
-  priorities: string[]
+export type TicketsResumo = {
+  open: number
+  inProgress: number
+  solved: number
+  timeAverageHours: number
+}
+
+export type TicketManagementResponse = {
+  resumo: TicketsResumo
+  status: TicketStatus[]
+  priorities: TicketPriority[]
   tickets: Ticket[]
-}
-
-export type SummaryCardProps = {
-  label: string
-  value: number
-}
-
-export type SelectProps = {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  options: string[]
 }
