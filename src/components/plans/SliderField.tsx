@@ -12,10 +12,10 @@ export default function SliderField({
   format,
 }: SliderFieldProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex items-center justify-between text-xs text-white/60">
         <span>{label}</span>
-        <span className="text-white/80">{format(value)}</span>
+        <span className="font-semibold text-white/80">{format(value)}</span>
       </div>
 
       <input
@@ -25,7 +25,7 @@ export default function SliderField({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full"
+        className="w-full accent-cyan-400"
       />
 
       <div className="flex justify-between text-[10px] text-white/40">
