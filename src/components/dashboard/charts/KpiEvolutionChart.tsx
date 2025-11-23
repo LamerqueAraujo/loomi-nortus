@@ -6,7 +6,6 @@ import type { KpiEvolutionSeries, KpiEvolutionOptions } from '@/types/dashboard'
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 export default function KpiEvolutionChart() {
-  // --------- MOCK TEMPORÁRIO (iremos substituir pelos dados reais) ---------
   const series: KpiEvolutionSeries[] = [
     {
       name: 'KPI',
@@ -19,7 +18,6 @@ export default function KpiEvolutionChart() {
     color: '#3BA7F3',
   }
 
-  // --------- CONFIGURAÇÃO DO APEXCHARTS ---------
   const options = {
     chart: {
       type: 'area' as const,
@@ -43,10 +41,10 @@ export default function KpiEvolutionChart() {
   }
 
   return (
-    <div className="bg-[#111C33] p-6 rounded-2xl">
-      <h2 className="text-lg font-semibold mb-4">Evolução dos KPIs</h2>
+    <div className="bg-[#FFFFFF0D] p-6 border border-white/10 rounded-2xl">
+      <h2 className="text-3xl font-semibold mb-4">Evolução dos KPIs</h2>
 
-      <Chart options={options} series={series} type="area" height={300} />
+      <Chart options={options} series={series} type="area" height={220} />
     </div>
   )
 }
