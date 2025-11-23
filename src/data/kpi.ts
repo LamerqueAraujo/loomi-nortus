@@ -1,4 +1,4 @@
-import { Kpi } from '@/types/dashboard'
+import { Kpi } from '@/types/dashboard/dashboard'
 
 export const KPI_LIST: Kpi[] = [
   {
