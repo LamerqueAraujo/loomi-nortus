@@ -30,6 +30,8 @@ export type KpiTrend = {
   conversion: KpiSeries
 }
 
+export type KpiKey = 'arpu' | 'churn' | 'retention' | 'conversion'
+
 export interface ImpactChartProps {
   title?: string
 }

@@ -13,6 +13,7 @@ export function Sidebar() {
     <aside
       className="
         hidden xl:flex
+        fixed top-0 left-0
         h-screen w-37.5 flex-col items-center justify-between
         bg-[#20273E]
         border-r border-white/5
@@ -20,7 +21,6 @@ export function Sidebar() {
         rounded-tr-[40px]
         rounded-br-[40px]
         z-[50]
-        relative
         shadow-xl shadow-black/60
       "
     >
