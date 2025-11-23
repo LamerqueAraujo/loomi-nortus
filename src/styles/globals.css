@@ -76,6 +76,16 @@ h6 {
   z-index: 5 !important;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Oculta no Firefox */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
 .skeleton-chart {
   height: 260px;
   width: 100%;
