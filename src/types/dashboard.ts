@@ -12,6 +12,7 @@ export interface Kpi {
   value: string
   trend: string
   trendColor: KpiColor
+  arrow?: 'up' | 'down' | null
 }
 
 export type KpiSeries = {
