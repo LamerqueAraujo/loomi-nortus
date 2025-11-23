@@ -5,13 +5,13 @@ export type DashboardPageKey =
   | 'customer-360'
   | 'chat'
 
-export type TrendColor = 'green' | 'red'
+export type KpiColor = 'neon-blue' | 'neon-green' | 'neon-cyan' | 'neon-pink'
 
 export interface Kpi {
   label: string
   value: string
   trend: string
-  trendColor: TrendColor
+  trendColor: KpiColor
 }
 
 export type KpiSeries = {
