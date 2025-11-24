@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useDashboardStore } from '@/stores/dashboard.store'
 import ActiveClientsTable from './ActiveClientsTable'
-import SelectWithIcon from '@/components/ui/SelectWithIcon' // 👈 importar aqui
+import SelectWithIcon from '@/components/ui/SelectWithIcon'
 
 export default function ActiveClients() {
   const {
@@ -62,7 +62,7 @@ export default function ActiveClients() {
   return (
     <section className="w-full rounded-2xl bg-[#FFFFFF0D] border border-white/10 px-6 py-8 flex flex-col gap-4">
       <header className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold text-white">Clientes ativos</h2>
+        <h2 className="text-xl font-bold text-white">Clientes ativos</h2>
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           {/* busca */}

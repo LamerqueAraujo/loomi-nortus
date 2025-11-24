@@ -13,7 +13,7 @@ export default function SegmentChip({
         flex items-center gap-2
         px-4 py-3
         rounded-full
-        text-[11px]
+        text-[14px]
         bg-[#0F1629]
         text-white/80
         border border-white/10

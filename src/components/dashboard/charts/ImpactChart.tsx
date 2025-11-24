@@ -21,7 +21,7 @@ export default function ImpactChart() {
 
       {/* título */}
       <header>
-        <h2 className="text-lg font-bold text-white">
+        <h2 className="text-xl font-bold text-white">
           Mapa de impacto por segmento
         </h2>
       </header>

@@ -58,7 +58,7 @@ export default function ImpactChartModal({
             {/* Cabeçalho */}
             <header className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-wide text-sky-400/80">
+                <p className="text-xl uppercase tracking-wide text-sky-400/80">
                   Análise detalhada
                 </p>
                 <h3 className="mt-1 text-lg font-semibold text-white">

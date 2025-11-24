@@ -105,7 +105,7 @@ export default function PlansView() {
     return <p className="text-sm text-red-400">Falha ao carregar planos.</p>
 
   return (
-    <div className="w-full max-h-[600px] space-y-8 p-8 rounded-3xl">
+    <div className="w-full space-y-8 p-8 rounded-3xl">
       {/* SEÇÃO PRINCIPAL */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
         {/* COLUNA GRANDE — PLANOS + SLIDERS */}
