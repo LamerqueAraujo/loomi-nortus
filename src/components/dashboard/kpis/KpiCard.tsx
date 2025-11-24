@@ -30,7 +30,7 @@ export default function KpiCard({
 
       <p
         className={`
-          text-sm 
+          text-sm font-semibold 
           ${colorMap[trendColor]} 
           ${trendColor === 'neon-green' ? 'drop-shadow-[0_0_8px_#22FF7A]' : ''}
         `}

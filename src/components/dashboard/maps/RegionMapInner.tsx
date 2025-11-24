@@ -39,7 +39,7 @@ export default function RegionMapInner() {
     <section className="w-full flex flex-col gap-4 p-6 rounded-2xl bg-[#FFFFFF0D] border border-white/10 ">
       {/* header */}
       <header className="flex flex-wrap items-center justify-between">
-        <h2 className="text-lg font-bold text-white ">
+        <h2 className="text-xl font-bold text-white ">
           Mapa de clientes por região
         </h2>
 

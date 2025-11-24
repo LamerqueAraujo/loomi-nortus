@@ -45,8 +45,14 @@ export default function TopBar() {
   return (
     <header
       className="
-        h-[88px] w-full flex items-center justify-between px-48 
+        flex items-center justify-between w-full 
         bg-[#20273E] border-b border-white/[0.04] z-10 relative
+
+        /* ALTURA */
+        h-[64px] sm:h-[72px] md:h-[88px]
+
+        /* PADDING */
+        px-4 sm:px-6 md:px-12 lg:px-24 xl:px-48
       "
     >
       <h1 className="text-white text-[20px] font-semibold tracking-wide">

@@ -42,7 +42,7 @@ export default function KpiEvolutionChart() {
   })
 
   return (
-    <section className="w-full rounded-2xl bg-[ #ffffff0d] border border-white/10 p-6 flex flex-col gap-8 shadow-[0_0_25px_rgba(20,240,255,0.08)]">
+    <section className="w-full rounded-2xl bg-[#FFFFFF0D] border border-white/10 p-6 flex flex-col gap-8 shadow-[0_0_25px_rgba(20,240,255,0.08)]">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-white">
           Evolução dos KPI&apos;s
@@ -56,7 +56,7 @@ export default function KpiEvolutionChart() {
               className={clsx(
                 'px-4 py-2 text-xs rounded-full transition border border-white/10',
                 active === key
-                  ? 'bg-[#14A7FF] text-white shadow-[0_0_12px_rgba(20,167,255,0.6)]'
+                  ? 'bg-[#14f1ff99] text-white shadow-[0_0_12px_rgba(20,241,255,0.6)]'
                   : 'bg-white/5 text-white/70 hover:bg-white/10',
               )}
             >

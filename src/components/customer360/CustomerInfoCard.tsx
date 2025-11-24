@@ -34,9 +34,9 @@ export default function CustomerInfoCard({ client, produtos, frases }: Props) {
     .toUpperCase()
 
   return (
-    <div className="rounded-3xl bg-[#0C1222] border border-white/10 p-6 w-full shadow-[0_0_40px_rgba(0,0,0,0.3)] space-y-6">
+    <div className="rounded-3xl bg-[#FFFFFF0D] border border-white/10 p-6 w-full space-y-6">
       {/* AVATAR + NOME */}
-      <div className="flex flex-col items-center text-center">
+      <div className="flex flex-col items-center text-center ">
         <div className="w-16 h-16 rounded-full bg-gradient-to-b from-[#4FA3FF] to-[#0059FF] flex items-center justify-center text-white text-xl font-semibold shadow-lg">
           {initials}
         </div>

@@ -48,6 +48,7 @@ export function TicketsTable({
     <section className="rounded-3xl bg-[#ffffff0d] p-4 shadow-lg shadow-black/40">
       {/* Header + filtros */}
       <div className="mb-4 flex items-center justify-between gap-4">
+        {/* Search */}
         <div className="relative w-1/3">
           <input
             className="h-10 w-full rounded-full border border-slate-700 bg-[#020617] pl-10 pr-4 text-sm text-slate-100 outline-none placeholder:text-slate-500 focus:border-sky-500"
@@ -60,57 +61,94 @@ export function TicketsTable({
           </span>
         </div>
 
+        {/* Selects */}
         <div className="flex gap-3">
-          <select
-            className="h-10 rounded-full border border-slate-700 bg-[#020617] px-4 text-sm text-slate-100 outline-none focus:border-sky-500"
-            value={filters.status}
-            onChange={(e) =>
-              onChangeFilters({
-                status: e.target.value as TicketsFilters['status'],
-              })
-            }
-          >
-            <option value="Todos">Todos os status</option>
-            {statusOptions.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+          {/* STATUS */}
+          <div className="relative">
+            <select
+              className="
+                h-10 rounded-full border border-slate-700 bg-[#020617]
+                pl-4 pr-10 text-sm text-slate-100 outline-none
+                focus:border-sky-500 appearance-none
+              "
+              value={filters.status}
+              onChange={(e) =>
+                onChangeFilters({
+                  status: e.target.value as TicketsFilters['status'],
+                })
+              }
+            >
+              <option value="Todos">Todos os status</option>
+              {statusOptions.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
 
-          <select
-            className="h-10 rounded-full border border-slate-700 bg-[#020617] px-4 text-sm text-slate-100 outline-none focus:border-sky-500"
-            value={filters.priority}
-            onChange={(e) =>
-              onChangeFilters({
-                priority: e.target.value as TicketsFilters['priority'],
-              })
-            }
-          >
-            <option value="Todas">Todas as prioridades</option>
-            {priorityOptions.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
+            {/* Ícone */}
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+              ▼
+            </span>
+          </div>
 
-          <select
-            className="h-10 rounded-full border border-slate-700 bg-[#020617] px-4 text-sm text-slate-100 outline-none focus:border-sky-500"
-            value={filters.responsible}
-            onChange={(e) =>
-              onChangeFilters({
-                responsible: e.target.value as TicketsFilters['responsible'],
-              })
-            }
-          >
-            <option value="Todos">Todos os responsáveis</option>
-            {responsiblesOptions.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+          {/* PRIORIDADE */}
+          <div className="relative">
+            <select
+              className="
+                h-10 rounded-full border border-slate-700 bg-[#020617]
+                pl-4 pr-10 text-sm text-slate-100 outline-none
+                focus:border-sky-500 appearance-none
+              "
+              value={filters.priority}
+              onChange={(e) =>
+                onChangeFilters({
+                  priority: e.target.value as TicketsFilters['priority'],
+                })
+              }
+            >
+              <option value="Todas">Todas as prioridades</option>
+              {priorityOptions.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+
+            {/* Ícone */}
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+              ▼
+            </span>
+          </div>
+
+          {/* RESPONSÁVEL */}
+          <div className="relative">
+            <select
+              className="
+                h-10 rounded-full border border-slate-700 bg-[#020617]
+                pl-4 pr-10 text-sm text-slate-100 outline-none
+                focus:border-sky-500 appearance-none
+              "
+              value={filters.responsible}
+              onChange={(e) =>
+                onChangeFilters({
+                  responsible: e.target.value as TicketsFilters['responsible'],
+                })
+              }
+            >
+              <option value="Todos">Todos os responsáveis</option>
+              {responsiblesOptions.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+
+            {/* Ícone */}
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs">
+              ▼
+            </span>
+          </div>
         </div>
       </div>
 
@@ -129,6 +167,7 @@ export function TicketsTable({
               <th className="px-6 py-3 text-right">Ações</th>
             </tr>
           </thead>
+
           <tbody>
             {pageTickets.length === 0 ? (
               <tr>
@@ -148,21 +187,28 @@ export function TicketsTable({
                   <td className="px-6 py-4 text-xs font-semibold">
                     {ticket.id}
                   </td>
+
                   <td className="px-6 py-4">
                     <TicketBadge priority={ticket.priority} />
                   </td>
+
                   <td className="px-6 py-4">
                     <div className="text-sm">{ticket.client}</div>
                     <div className="text-xs text-slate-400">{ticket.email}</div>
                   </td>
+
                   <td className="px-6 py-4 text-sm">{ticket.subject}</td>
+
                   <td className="px-6 py-4">
                     <StatusBadge status={ticket.status} />
                   </td>
+
                   <td className="px-6 py-4 text-sm">{ticket.createdAt}</td>
+
                   <td className="px-6 py-4 text-sm">
                     <span className="font-medium">{ticket.responsible}</span>
                   </td>
+
                   <td className="px-6 py-4 text-right text-xs">
                     <button
                       className="mr-3 text-sky-400 hover:underline"
@@ -199,6 +245,7 @@ export function TicketsTable({
           >
             «
           </button>
+
           <button
             disabled={!canPrev}
             onClick={() => onChangePage(page - 1)}
@@ -206,6 +253,7 @@ export function TicketsTable({
           >
             ‹
           </button>
+
           <button
             disabled={!canNext}
             onClick={() => onChangePage(page + 1)}
@@ -213,6 +261,7 @@ export function TicketsTable({
           >
             ›
           </button>
+
           <button
             disabled={!canNext}
             onClick={() => onChangePage(totalPages)}

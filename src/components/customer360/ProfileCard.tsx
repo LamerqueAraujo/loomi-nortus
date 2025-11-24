@@ -1,85 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import api from '@/services/api'
 import type { Client360Response, Product } from '@/types/customer360'
 import { Phone, Mail, MoreHorizontal, ExternalLink } from 'lucide-react'
-import { OfferCard } from './OfferCard'
-import { ScoreBarCard } from './ScoreBarCard'
-import { AISuggestionCardContent } from './AISuggestionCard'
-import { ClassificationSectionInsideIA } from './ClassificationSection'
-
-/* ======================================================
-   VISÃO 360 — VIEW PRINCIPAL
-====================================================== */
-
-export default function Customer360View() {
-  const [data, setData] = useState<Client360Response | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchView() {
-      try {
-        const res = await api.get<Client360Response>('/360-view.json')
-        setData(res.data)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchView()
-  }, [])
-
-  if (loading)
-    return <p className="text-sm text-white/60">Carregando visão 360º...</p>
-
-  if (!data)
-    return <p className="text-sm text-red-400">Falha ao carregar visão 360º.</p>
-
-  const { client, produtos } = data
-
-  return (
-    <div className="h-[calc(100vh-88px)] w-full overflow-hidden">
-      {/* SCROLL invisível */}
-      <div
-        className="
-        h-full w-full overflow-y-auto pr-1
-        scrollbar-none
-        [&::-webkit-scrollbar]:hidden
-      "
-      >
-        <main className="px-6 pb-8 pt-6 space-y-6">
-          <section
-            className="
-              grid 
-              grid-cols-1 
-              lg:grid-cols-[380px_1fr_320px] 
-              gap-6 
-              overflow-hidden
-            "
-          >
-            <ProfileCard client={client} produtos={produtos} />
-            <AISuggestionCardWithClassification />
-            <RightOffersColumn />
-          </section>
-        </main>
-      </div>
-    </div>
-  )
-}
-
-/* ======================================================
-   CARD — PERFIL DO CLIENTE
-====================================================== */
 
 type ProfileCardProps = {
   client: Client360Response['client']
   produtos: Product[]
 }
 
-function ProfileCard({ client, produtos }: ProfileCardProps) {
+export function ProfileCard({ client, produtos }: ProfileCardProps) {
   const initials = client.name
     .split(' ')
     .map((n) => n[0])
@@ -103,19 +32,21 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
   return (
     <div
       className="
-      rounded-[28px] bg-[#FFFFFF0D] border border-white/10
+      rounded-[28px] 
+      bg-[#FFFFFF0D] 
+      border border-white/10 
       px-8 py-8 
-      flex flex-col gap-8
-    "
+      flex flex-col gap-8"
     >
       {/* Avatar */}
       <div className="flex flex-col items-center text-center gap-4">
         <div
           className="
-          w-20 h-20 rounded-full bg-gradient-to-b from-[#4FA3FF] to-[#0059FF]
-          flex items-center justify-center text-white text-2xl font-semibold
-          shadow-[0_0_35px_rgba(59,130,246,0.6)]
-        "
+          w-20 h-20 rounded-full
+          bg-gradient-to-b from-[#4FA3FF] to-[#0059FF]
+          flex items-center justify-center
+          text-white text-2xl font-semibold
+          shadow-[0_0_35px_rgba(59,130,246,0.6)]"
         >
           {initials}
         </div>
@@ -138,7 +69,9 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-white text-sm">Produtos</p>
-          <button className="text-white/40 hover:text-white text-lg">+</button>
+          <button className="text-white/40 hover:text-white text-lg leading-none">
+            +
+          </button>
         </div>
 
         <div className="space-y-3 text-sm">
@@ -151,11 +84,11 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
                   }`}
                 />
                 <span
-                  className={
+                  className={`${
                     p.status === 'Ativo'
                       ? 'text-white/90'
                       : 'text-white/40 line-through'
-                  }
+                  }`}
                 >
                   {p.name}
                 </span>
@@ -175,9 +108,10 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
 
       <Divider />
 
-      {/* Tags */}
+      {/* Perfil tags */}
       <section>
         <p className="font-semibold text-white text-sm mb-3">Perfil</p>
+
         <div className="flex flex-wrap gap-3">
           {tags.map((tag) => (
             <span
@@ -195,6 +129,7 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
       {/* Frases */}
       <section className="space-y-3">
         <p className="font-semibold text-white text-sm">Frases captadas</p>
+
         {frases.map((f) => (
           <div key={f.text} className="rounded-xl bg-white/[0.06] px-4 py-3">
             <p className="text-sm text-white/90">&quot;{f.text}&quot;</p>
@@ -202,39 +137,6 @@ function ProfileCard({ client, produtos }: ProfileCardProps) {
           </div>
         ))}
       </section>
-    </div>
-  )
-}
-
-function AISuggestionCardWithClassification() {
-  return (
-    <div
-      className="
-      rounded-[28px] bg-[#FFFFFF0D] border border-white/10 px-6 py-6
-      shadow-[0_0_32px_rgba(0,0,0,0.55)] flex flex-col gap-6
-    "
-    >
-      <AISuggestionCardContent />
-      <ClassificationSectionInsideIA />
-    </div>
-  )
-}
-
-function RightOffersColumn() {
-  return (
-    <div className="flex flex-col gap-4">
-      <OfferCard
-        variant="primary"
-        title="Seguro de vida individual"
-        description="Proteção financeira completa com cobertura por morte e doenças graves."
-        price="R$ 127,50/mês"
-      />
-      <OfferCard
-        variant="secondary"
-        title="Upgrade do seguro residencial"
-        description="Plano completo com proteção contra danos elétricos e assistência 24h."
-        price="R$ 127,50/mês"
-      />
     </div>
   )
 }
@@ -256,16 +158,4 @@ function ProfileAction({
 
 function Divider() {
   return <div className="h-px w-full bg-white/10" />
-}
-
-function SuggestionTab({ label, active }: { label: string; active?: boolean }) {
-  return active ? (
-    <button className="px-4 py-1 rounded-full bg-[#2563EB] text-white text-[11px] font-semibold shadow-[0_0_14px_rgba(37,99,235,0.7)]">
-      {label}
-    </button>
-  ) : (
-    <button className="px-4 py-1 rounded-full bg-white/5 text-white/70 text-[11px] hover:bg-white/10 transition-colors">
-      {label}
-    </button>
-  )
 }

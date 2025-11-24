@@ -28,7 +28,7 @@ export default function ActiveClientsTable({
       className="
         overflow-x-auto 
         rounded-2xl 
-        bg-[#FFFFFF1F] 
+        bg-[#FFFFFF0D] 
         border border-white/5
         min-h-[480px]
         transition-all duration-300
