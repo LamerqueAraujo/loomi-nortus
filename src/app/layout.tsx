@@ -19,6 +19,9 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: 'Loomi Nortus',
+  icons: {
+    icon: '/favicon.ico',
+  },
   description:
     'Aplicação desenvolvida para o processo seletivo da empresa Loomi',
 }
